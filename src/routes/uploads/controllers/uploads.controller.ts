@@ -1,6 +1,5 @@
 import { uploadService } from './uploads.service';
 import { Request, Response } from "express";
-import { TypedRequest } from "../../types";
 
 export const uploadConroller = async (req: Request, res: Response) => {
     try {
