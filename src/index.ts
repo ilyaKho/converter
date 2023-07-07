@@ -10,7 +10,7 @@ let connections = 0
 app.use(morgan('dev'))
 app.use(express.json());
 app.use((req, res, next) => connectionLimiter(req, res, next, connections))
-app.use(auth)
+// app.use(auth)
 app.use(routes)
 app.listen(PORT, ()=> console.log('Сервер запушен на порту: ' + PORT))
 
