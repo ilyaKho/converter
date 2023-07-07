@@ -1,9 +1,8 @@
 import { uploadService } from './uploads.service';
-import { Response } from "express";
-import { UploadedFileDto } from "./dto/uploadedFile.dto";
+import { Request, Response } from "express";
 import { TypedRequest } from "../../types";
 
-export const uploadConroller = async (req: TypedRequest.Body<UploadedFileDto>, res: Response) => {
+export const uploadConroller = async (req: Request, res: Response) => {
     try {
        const result = await uploadService({...req.body, file: req.file})
        res.status(200).download(result)
