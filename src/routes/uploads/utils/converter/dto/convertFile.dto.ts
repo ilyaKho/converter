@@ -1,7 +1,5 @@
 export class ConvertFileDto{
-    fileName: string
-    pathFrom: string
-    pathTo: string
+    filename: string
     extention:  string
     quality?: number
 }

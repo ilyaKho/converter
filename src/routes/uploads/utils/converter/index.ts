@@ -1,4 +1,3 @@
-import { conterFilesFromDir } from './converterService';
 import { Command } from 'commander';
 const program = new Command();
 program.option('-e, --ext <char> ', 'Extension name')

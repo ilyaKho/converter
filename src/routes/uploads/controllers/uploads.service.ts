@@ -1,4 +1,6 @@
-import { conterFilesFromDir } from "../../../converter/converterService"
+import { nanoid } from "nanoid"
+import { convert } from "../utils/converter/converterService"
+import { queues } from "../utils/filesQueue"
 import { basePath } from "./uploads.configs"
 import { uploadType } from "./uploads.schema"
 
@@ -10,8 +12,19 @@ export const uploadService = async (dto: uploadType) => {
         if (dto?.extention === 'jpeg' || dto?.extention === 'jpg') {
             if (dto.quality) quality = Number(dto.quality)
         }
-        const file = await conterFilesFromDir({ fileName: dto.file.filename, pathFrom: basePath, pathTo: basePath, extention, quality })
-        return file
+        const fileId = nanoid()
+        const userId = nanoid()
+        let result = queues.addToQueue(
+            {
+                ...dto.file,
+                fileId,
+                extention,
+                quality,
+                userId
+            }
+        )
+        // const file = await convert({ filename: dto.file.filename, extention, quality })
+        return result
     } catch (error) {
         throw error
     }
