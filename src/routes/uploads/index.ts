@@ -4,7 +4,8 @@ import { uploadConfig } from "./controllers/uploads.configs";
 import { uploadsValidation } from "./controllers/uploads.validation";
 import {routes as statusRouter} from './status/index'
 const routes = express.Router()
-routes.get('/status', statusRouter)
+routes.use('/status', statusRouter)
+
 routes.post('/', uploadConfig, uploadsValidation, uploadConroller)
 
 export {routes}

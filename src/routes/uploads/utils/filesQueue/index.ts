@@ -8,15 +8,12 @@ export interface iFiles extends queueType {
 
 class Queues {
     private instance: Queues
-    private inProccessing: queueType[]
-    private inQueue: queueType[]
+    private inProccessing: queueType[] =[]
+    private inQueue: queueType[]=[]
     private limit = 3
     private files: iFiles[] = []
     constructor() {
-        if (!this.instance) {
-            this.instance = new Queues()
-        }
-        return this.instance
+       
     }
     addToQueue(file: queueType) {
         let status = '' as status
@@ -30,21 +27,24 @@ class Queues {
             status = 'Добавлено в очедерь'
         }
         this.files.push({ ...file, status })
-        this.changeStatus(status, file.fileId)
         return { fileName: file.filename, fileId: file.fileId, status }
     }
     async runProccess(file: queueType) {
-        let result = await new Promise((resolve, reject) => {
-            setTimeout(async () => resolve(await convert({...file})), 3000)
+        let result: string = await new Promise((resolve, reject) => {
+            setTimeout(async () => resolve(await convert({...file})), 50000)
         })
-        this.changeStatus('В процессе обработки', file.fileId)
+        this.changeStatus('Готово', file.fileId)
         this.removeFromProccessing(file.fileId)
+        this.tranferFromQueue()
         return result
     }
 
     tranferFromQueue() {
-        this.inProccessing.push(this.inQueue[0])
-        this.inQueue.shift()
+        if(this.inQueue.length){
+            this.inProccessing.push(this.inQueue[0])
+            this.runProccess(this.inQueue[0])
+            this.inQueue.shift()
+        }        
         return this.inQueue
     }
     removeFromProccessing(fileId: string) {
@@ -53,7 +53,7 @@ class Queues {
         return this.inProccessing
     }
     changeStatus(status: status, fileId: string) {
-        this.files.map(el => {
+        this.files = this.files.map(el => {
             if (el.fileId === fileId) {
                 el.status = status
                 return el
