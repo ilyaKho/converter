@@ -7,7 +7,6 @@ export interface iFiles extends queueType {
 
 
 class Queues {
-    private instance: Queues
     private inProccessing: queueType[] =[]
     private inQueue: queueType[]=[]
     private limit = 3

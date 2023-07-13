@@ -2,8 +2,18 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
-    "outDir": "build"
+    "outDir": "build",
+    "resolveJsonModule": true
+    
   },
+  "ts-node": {
+    "files": true,
+    "strictPropertyInitialization": false,
+
+  },
+  "files": [
+    // "src/types/*.d.ts"
+  ],
   "include": [
     "src/**/*.ts",
     "test/**/*.ts"

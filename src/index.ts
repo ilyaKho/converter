@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import { routes } from './routes'
 import { auth } from './auth'
 const app = express()
-const PORT = 5000
+const PORT = process.env.PORT!
 
 app.use(morgan('dev'))
 app.use(express.json());
