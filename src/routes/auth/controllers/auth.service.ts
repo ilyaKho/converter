@@ -1,6 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import { signUpType } from './auth.schema'
 import { nanoid } from 'nanoid';
+import jwt from 'jsonwebtoken'
 interface iUser {
     user_id: string
     email: string
@@ -13,10 +14,36 @@ const oAuth2Client = new OAuth2Client(
     process.env.GOOGLE_OAUTH_CLIENT_SECRET!,
     process.env.GOOGLE_OAUTH_REDIRECT_URL!
 );
-
-export const registrate = async (email: string) => {
+const findUser = (email: string) => {
     try {
         let user = db.find(el => el.email === email)
+        return user
+    } catch (error) {
+        throw error
+    }
+}
+const generateToken =async (user: iUser) => {
+    try {
+        let SECRET_KEY = process.env.SECRET_KEY!
+        const token = await jwt.sign({ user }, SECRET_KEY, {
+            expiresIn: 2 * 60 * 100,
+        });
+        return token
+    } catch (error) {
+        throw error
+    }
+}
+const ucodeToken = (token: string) => {
+    try {
+        jwt.verify(token, process.env.SECRET_KEY!)
+
+    } catch (error) {
+        throw error
+    }
+}
+export const registrate = async (email: string) => {
+    try {
+        let user = findUser(email)
         if (user) return user
 
         let new_user: iUser = {
@@ -33,40 +60,43 @@ export const registrate = async (email: string) => {
     }
 }
 
-export const signIn = async (dto: signUpType) => {
+export const signIn = async (email: string) => {
     try {
-        // await admin.auth().generateSignInWithEmailLink()
+        let user = findUser(email)
+        if (!user) user = await registrate(email)
+        let token = generateToken(user)
+        return token
     } catch (error) {
         throw error
     }
 }
-export const requestGoogleAccess = async () => {
-    const authorizeUrl = oAuth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: [
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email",
-        ].join(" "),
-    });
-    return authorizeUrl
-}
+// export const requestGoogleAccess = async () => {
+//     const authorizeUrl = oAuth2Client.generateAuthUrl({
+//         access_type: 'offline',
+//         scope: [
+//             "https://www.googleapis.com/auth/userinfo.profile",
+//             "https://www.googleapis.com/auth/userinfo.email",
+//         ].join(" "),
+//     });
+//     return authorizeUrl
+// }
 
-export const verifyGoogleAccess = async (code: string) => {
-    try {
-        const tokensInfo = await oAuth2Client.getToken(code)
-        oAuth2Client.setCredentials({
-            refresh_token: tokensInfo.tokens.refresh_token
-        });
-        const ticket = await oAuth2Client.verifyIdToken({
-            idToken: tokensInfo.tokens.id_token!,
-            audience: process.env.GOOGLE_CLIENT_ID,
-        });
-        const payload = ticket.getPayload()!
-        const email = payload.email
-        return email
-    } catch (error) {
-        throw error
-    }
-}
+// export const verifyGoogleAccess = async (code: string) => {
+//     try {
+//         const tokensInfo = await oAuth2Client.getToken(code)
+//         oAuth2Client.setCredentials({
+//             refresh_token: tokensInfo.tokens.refresh_token
+//         });
+//         const ticket = await oAuth2Client.verifyIdToken({
+//             idToken: tokensInfo.tokens.id_token!,
+//             audience: process.env.GOOGLE_CLIENT_ID,
+//         });
+//         const payload = ticket.getPayload()!
+//         const email = payload.email
+//         return email
+//     } catch (error) {
+//         throw error
+//     }
+// }
 
 
