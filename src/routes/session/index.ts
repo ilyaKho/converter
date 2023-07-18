@@ -4,7 +4,7 @@ import { sessionGuard } from "./controllers/session.guard";
 
 
 const routes = express.Router()
-routes.post('/signup',)
-routes.get('/',sessionGuard, setSession)
+// routes.post('/signup',)
+routes.get('/')
 
 export {routes}

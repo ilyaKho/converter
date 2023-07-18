@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import * as authService from './auth.service'
-import {requestGoogleAccess as RequestGoogleAccess} from './middleware/verifyGoogleAccess'
+import {requestGoogleAccess as RequestGoogleAccess} from '../guards/verifyGoogleAccess'
 export const requestGoogleAccess = async (req: Request, res: Response) => {
     try {
         const url = await RequestGoogleAccess()

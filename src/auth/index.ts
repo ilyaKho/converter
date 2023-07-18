@@ -2,12 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { nanoid } from 'nanoid'
 import * as admin from 'firebase-admin'
+import { authorizedRequest } from "../types";
 
 const SECRET_KEY = 'jsdfsdf999ds'
 
-export interface CustomRequest extends Request {
-    token: string | JwtPayload;
-}
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -21,7 +19,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         const decoded = jwt.verify(token, SECRET_KEY);
-        (req as CustomRequest).token = decoded;
+        (req as authorizedRequest).user = decoded;
 
         return next();
     } catch (err) {

@@ -1,7 +1,7 @@
 import express from "express";
 import { requestGoogleAccess } from "./controllers/auth.controllers";
 import { authValidation } from "./controllers/auth.validation";
-import { verifyGoogleAccess } from "./controllers/middleware/verifyGoogleAccess";
+import { verifyGoogleAccess } from "./guards/verifyGoogleAccess";
 import { signIn } from "./controllers/auth.controllers";
 
 

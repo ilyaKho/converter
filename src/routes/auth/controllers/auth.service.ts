@@ -1,13 +1,9 @@
 import { OAuth2Client } from 'google-auth-library';
 import { signUpType } from './auth.schema'
 import { nanoid } from 'nanoid';
-import jwt from 'jsonwebtoken'
-interface iUser {
-    user_id: string
-    email: string
-    subscription: boolean
-    expires: string
-}
+import { iUser } from '../../../types';
+import { generateToken } from '../utils/jwt';
+
 let db = [] as iUser[]
 const oAuth2Client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID!,
@@ -22,31 +18,14 @@ const findUser = (email: string) => {
         throw error
     }
 }
-const generateToken =async (user: iUser) => {
-    try {
-        let SECRET_KEY = process.env.SECRET_KEY!
-        const token = await jwt.sign({ user }, SECRET_KEY, {
-            expiresIn: 2 * 60 * 100,
-        });
-        return token
-    } catch (error) {
-        throw error
-    }
-}
-const ucodeToken = (token: string) => {
-    try {
-        jwt.verify(token, process.env.SECRET_KEY!)
 
-    } catch (error) {
-        throw error
-    }
-}
 export const registrate = async (email: string) => {
     try {
         let user = findUser(email)
         if (user) return user
 
         let new_user: iUser = {
+            authorized: true,
             user_id: nanoid(),
             email,
             subscription: false,
