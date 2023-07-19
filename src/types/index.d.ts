@@ -1,6 +1,6 @@
 import { Request } from "express"
 import { JwtPayload } from "jsonwebtoken"
-import { UserT, unknownUserT } from './../routes/users/users.schema';
+import { UserT, unknownUserT } from '../routes/users/controllers/users.schema';
 
 export type status = 'Загружено' | 'Добавлено в очедерь' | 'В процессе обработки' | 'Готово'
 export interface iUser {

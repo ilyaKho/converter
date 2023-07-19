@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { authorizedRequest } from "../../../types";
-import { UserT, unknownUserT } from "../users.schema";
-import * as userService from '../users.service'
+import { UserT, unknownUserT } from "../controllers/users.schema";
+import * as userService from '../controllers/users.service'
 const checkLimits=(user:UserT | unknownUserT)=>{
     if(user){
         if(user.dayLimit === 0 || user.monthLimit === 0) return false

@@ -1,9 +1,10 @@
 import express from "express";
 import { routes as uploadRouts } from './uploads/index'
 import { routes as authRouts } from './auth/index'
-import { isLogin } from "./auth/guards/isLogin";
+import { routes as profileRouts } from './users/index'
 import { authorizedRequest } from "../types";
 import { dayLimit } from "./users/guards/dayLimit";
+import { isLogin } from "./auth/guards/isLogin";
 const routes = express.Router()
 
 routes.use('/',
@@ -13,6 +14,7 @@ routes.use('/',
     }
 )
 routes.use('/auth', authRouts)
+routes.use('/profile', isLogin, profileRouts)
 routes.use('/upload', dayLimit, uploadRouts)
 
 

@@ -3,8 +3,8 @@ import { signUpType } from './auth.schema'
 import { nanoid } from 'nanoid';
 import { iUser } from '../../../types';
 import { generateToken } from '../utils/jwt';
-import { UserT } from '../../users/users.schema';
-import * as userService from '../../users/users.service' 
+import { UserT } from '../../users/controllers/users.schema';
+import * as userService from '../../users/controllers/users.service' 
 const oAuth2Client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID!,
     process.env.GOOGLE_OAUTH_CLIENT_SECRET!,

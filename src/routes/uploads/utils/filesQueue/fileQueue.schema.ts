@@ -1,5 +1,5 @@
 import { string, z } from 'zod'
-import { userScheme } from '../../../users/users.schema';
+import { userScheme } from '../../../users/controllers/users.schema';
 import { fileScheme, uploadSchema } from '../../controllers/uploads.schema';
 
 export const queueSchema = fileScheme.pick({

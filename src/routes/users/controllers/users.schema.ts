@@ -16,7 +16,10 @@ export const unknownUserScheme = userScheme.pick({
     monthLimit: true,
     createdDate: true
 })
-
+export const paymentScheme = z.object({
+    amount: z.number()
+})
+export type PaymentT = z.infer<typeof paymentScheme>;
 export type UserT = z.infer<typeof userScheme>;
 export type unknownUserT = z.infer<typeof unknownUserScheme>;
 

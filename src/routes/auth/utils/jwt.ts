@@ -1,5 +1,5 @@
 import jwt, { TokenExpiredError } from 'jsonwebtoken'
-import { UserT, unknownUserT } from '../../users/users.schema';
+import { UserT, unknownUserT } from '../../users/controllers/users.schema';
 
 const SECRET_KEY = process.env.SECRET_KEY! 
 export const generateToken =async (user: UserT| unknownUserT) => {
