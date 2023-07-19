@@ -3,37 +3,19 @@ import { signUpType } from './auth.schema'
 import { nanoid } from 'nanoid';
 import { iUser } from '../../../types';
 import { generateToken } from '../utils/jwt';
-
-let db = [] as iUser[]
+import { UserT } from '../../users/users.schema';
+import * as userService from '../../users/users.service' 
 const oAuth2Client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_ID!,
     process.env.GOOGLE_OAUTH_CLIENT_SECRET!,
     process.env.GOOGLE_OAUTH_REDIRECT_URL!
 );
-const findUser = (email: string) => {
-    try {
-        let user = db.find(el => el.email === email)
-        return user
-    } catch (error) {
-        throw error
-    }
-}
+
 
 export const registrate = async (email: string) => {
-    try {
-        let user = findUser(email)
-        if (user) return user
-
-        let new_user: iUser = {
-            authorized: true,
-            user_id: nanoid(),
-            email,
-            subscription: false,
-            expires: ''
-        }
-        db.push(new_user)
-        return new_user
-
+    try {  
+        let user = userService.createUser(email)
+        return user
     } catch (error) {
         throw error
     }
@@ -41,7 +23,7 @@ export const registrate = async (email: string) => {
 
 export const signIn = async (email: string) => {
     try {
-        let user = findUser(email)
+        let user = userService.getUserByEmail(email)
         if (!user) user = await registrate(email)
         let token = generateToken(user)
         return token

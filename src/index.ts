@@ -3,7 +3,6 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 import { routes } from './routes'
-import { auth } from './auth'
 import { isLogin } from './routes/auth/guards/isLogin';
 const app = express()
 const PORT = process.env.PORT!

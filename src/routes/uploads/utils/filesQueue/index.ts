@@ -1,18 +1,34 @@
-import { queueType } from "./fileQueue.schema";
-import { convert } from "../converter/converterService";
-import { status } from "../../../../types";
-export interface iFiles extends queueType {
-    status: status
+import { queueType, queueWithStatusType } from "./fileQueue.schema";
+import { iUser, status } from "../../../../types";
+import { convert } from "../converter/controllers/converterService";
+
+interface iLocalUser extends iUser{
+    files?: queueWithStatusType[]
 }
 
-
-export class Queues {
-    private inProccessing: queueType[] =[]
-    private inQueue: queueType[]=[]
+export class Files {
+    private files: queueWithStatusType[] = []
+    addFile(file: queueWithStatusType) {
+        this.files.push(file)
+        return this.files
+    }
+    changeStatus(status: status, fileId: string) {
+        this.files = this.files.map(el => {
+            if (el.fileId === fileId) {
+                el.status = status
+                return el
+            }
+            return el
+        })
+    }
+}
+export class QueuesSevice {
+    private inProccessing: queueType[] = []
+    private inQueue: queueType[] = []
     private limit = 3
-    private files: iFiles[] = []
-    constructor() {
-       
+    private queues: Files
+    constructor(files: Files) {
+        this.queues = files
     }
     addToQueue(file: queueType) {
         let status = '' as status
@@ -25,25 +41,25 @@ export class Queues {
             this.inQueue.push(file)
             status = 'Добавлено в очедерь'
         }
-        this.files.push({ ...file, status })
+        this.queues.addFile({ ...file, status })
         return { fileName: file.filename, fileId: file.fileId, status }
     }
     async runProccess(file: queueType) {
         let result: string = await new Promise((resolve, reject) => {
-            setTimeout(async () => resolve(await convert({...file})), 50000)
+            setTimeout(async () => resolve(await convert({ ...file })), 50000)
         })
-        this.changeStatus('Готово', file.fileId)
-        this.removeFromProccessing(file.fileId)
+        this.changeStatus('Готово', file.fileId!)
+        this.removeFromProccessing(file.fileId!)
         this.tranferFromQueue()
         return result
     }
 
     tranferFromQueue() {
-        if(this.inQueue.length){
+        if (this.inQueue.length) {
             this.inProccessing.push(this.inQueue[0])
             this.runProccess(this.inQueue[0])
             this.inQueue.shift()
-        }        
+        }
         return this.inQueue
     }
     removeFromProccessing(fileId: string) {
@@ -52,17 +68,11 @@ export class Queues {
         return this.inProccessing
     }
     changeStatus(status: status, fileId: string) {
-        this.files = this.files.map(el => {
-            if (el.fileId === fileId) {
-                el.status = status
-                return el
-            }
-            return el
-        })
+        this.queues.changeStatus(status, fileId)
     }
-    getFileList(){
-        return this.files
+    getFileList() {
+        return this.queues
     }
 }
-
-export const queues = new Queues()
+export const files = new Files()
+export const queues = new QueuesSevice(files)

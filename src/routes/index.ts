@@ -1,9 +1,9 @@
 import express from "express";
 import { routes as uploadRouts } from './uploads/index'
-import { routes as sessionRouts } from './session/index'
 import { routes as authRouts } from './auth/index'
 import { isLogin } from "./auth/guards/isLogin";
 import { authorizedRequest } from "../types";
+import { dayLimit } from "./users/guards/dayLimit";
 const routes = express.Router()
 
 routes.use('/',
@@ -13,7 +13,7 @@ routes.use('/',
     }
 )
 routes.use('/auth', authRouts)
-routes.use('/upload', uploadRouts)
+routes.use('/upload', dayLimit, uploadRouts)
 
 
 export { routes }

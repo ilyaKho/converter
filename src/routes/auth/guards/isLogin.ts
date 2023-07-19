@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { generateToken, ucodeToken } from '../utils/jwt';
 import { authorizedRequest, iUser } from '../../../types';
 import { nanoid } from 'nanoid';
+import { UserT, unknownUserT } from "../../users/users.schema";
 
 
 export const isLogin = async (req: Request, res: Response, next: NextFunction) => {
@@ -14,9 +15,11 @@ export const isLogin = async (req: Request, res: Response, next: NextFunction) =
             request.token = ''
         }
         else{
-            let newUser: iUser = {
+            let newUser: unknownUserT = {
                authorized: false,
-               user_id: nanoid() 
+               userId: nanoid(),
+               monthLimit: 20,
+               dayLimit: 20
             }
             const newToken = await generateToken(newUser)
             request.user = newUser
