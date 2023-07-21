@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { z, ZodError } from 'zod'
+import { ZodError } from 'zod'
 import { uploadSchema } from "./uploads.schema";
 export const uploadsValidation = (req: Request, res: Response, next: NextFunction) => {
     try {

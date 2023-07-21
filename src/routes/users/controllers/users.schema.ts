@@ -1,6 +1,6 @@
 import { z } from 'zod'
 export const userScheme = z.object({
-    authorized: z.boolean().optional(),
+    authorized: z.boolean(),
     userId: z.string(),
     email: z.string(),
     subscription: z.boolean(),
@@ -21,6 +21,6 @@ export const paymentScheme = z.object({
 })
 export type PaymentT = z.infer<typeof paymentScheme>;
 export type UserT = z.infer<typeof userScheme>;
-export type unknownUserT = z.infer<typeof unknownUserScheme>;
+export type UnknownUserT = z.infer<typeof unknownUserScheme>;
 
 

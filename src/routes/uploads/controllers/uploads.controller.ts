@@ -1,10 +1,10 @@
-import { authorizedRequest, iUser } from '../../../types';
+import { AuthorizedRequestT } from '../../../types';
 import { uploadService } from './uploads.service';
 import { Request, Response } from "express";
 
 export const uploadConroller = async (req: Request, res: Response) => {
     try {
-        const user = (req as authorizedRequest).user
+        const user = (req as AuthorizedRequestT).user
         const result = await uploadService(
             { ...req.body, file: req.file },
             { ...user}

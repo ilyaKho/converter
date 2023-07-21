@@ -1,5 +1,4 @@
 import { string, z } from 'zod'
-import { userScheme } from '../../../users/controllers/users.schema';
 import { fileScheme, uploadSchema } from '../../controllers/uploads.schema';
 
 export const queueSchema = fileScheme.pick({
@@ -14,5 +13,5 @@ export const queueWithStatusSchema = z.object({
     status: z.string()
 }).merge(queueSchema)
 
-export type queueType = z.infer<typeof queueSchema>;
-export type queueWithStatusType = z.infer<typeof queueWithStatusSchema>;
+export type Queue = z.infer<typeof queueSchema>;
+export type QueueWithStatus = z.infer<typeof queueWithStatusSchema>;

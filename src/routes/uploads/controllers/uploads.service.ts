@@ -1,12 +1,9 @@
 import { nanoid } from "nanoid"
-import { convert } from "../utils/converter/converterService"
-import { Queues, queues } from "../utils/filesQueue"
-import { basePath } from "./uploads.configs"
-import { uploadType } from "./uploads.schema"
-import { iUser } from "../../../types"
-import { queueType } from "../utils/filesQueue/fileQueue.schema"
+import { queues, queuesPremium } from "../utils/filesQueue"
+import { UploadT } from "./uploads.schema"
+import { UnknownUserT, UserT } from "../../users/controllers/users.schema"
 
-export const hasSubscription = (user: iUser) => {
+export const hasSubscription = (user: UserT) => {
     try {
         if (user.authorized && user.subscription && user.expires) return true
         else return false
@@ -15,17 +12,16 @@ export const hasSubscription = (user: iUser) => {
     }
 }
 
-export const uploadService = async (dto: uploadType, user: iUser) => {
+export const uploadService = async (dto: UploadT, user: UserT | UnknownUserT) => {
     try {
         let extention = dto.extention ? dto.extention : 'webp'
-        let quality = 0
+        let quality = '0'
         if (!dto.file?.filename) return ''
         if (dto?.extention === 'jpeg' || dto?.extention === 'jpg') {
-            if (dto.quality) quality = Number(dto.quality)
+            if (dto.quality) quality = dto.quality
         }
+
         const fileId = nanoid()
-       
-        const subscription = hasSubscription(user)
         const queuesPayload = {
             ...dto.file,
             ...user,
@@ -33,16 +29,13 @@ export const uploadService = async (dto: uploadType, user: iUser) => {
             extention,
             quality,
         }
-        if (subscription) {
-            const premiumQueues = new Queues()
-            let result = premiumQueues.addToQueue(queuesPayload)
-            return result
-        }
-        else {
-            let result = queues.addToQueue(queuesPayload)
-            return result
-        }
 
+        // const subscription = hasSubscription(user as UserT)       
+        // let result
+        // if (subscription) result = queuesPremium.addToQueue(queuesPayload)
+        // else result = queues.addToQueue(queuesPayload)
+       let  result = queuesPremium.addToQueue(queuesPayload)
+        return result
     } catch (error) {
         throw error
     }

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { authorizedRequest } from "../../../types";
-import { UserT, unknownUserT } from "../controllers/users.schema";
+import { AuthorizedRequestT } from "../../../types";
+import { UserT, UnknownUserT } from "../controllers/users.schema";
 import * as userService from '../controllers/users.service'
-const checkLimits=(user:UserT | unknownUserT)=>{
+const checkLimits=(user:UserT | UnknownUserT)=>{
     if(user){
         if(user.dayLimit === 0 || user.monthLimit === 0) return false
         else return true
@@ -11,11 +11,11 @@ const checkLimits=(user:UserT | unknownUserT)=>{
 }
 export const dayLimit =(req: Request, res: Response, next: NextFunction)=>{
     try {
-        let user = userService.getUserById((req as authorizedRequest).user.userId)
+        let user = userService.getUserById((req as AuthorizedRequestT).user.userId)
         let result: boolean
         if(user) result = checkLimits(user)
         else {
-            let cookieUser = (req as authorizedRequest).user
+            let cookieUser = (req as AuthorizedRequestT).user
             result = checkLimits(cookieUser)
         }
         if(!result) return res.status(402).json('Закончились лимиты.')

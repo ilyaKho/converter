@@ -9,6 +9,7 @@
   },
   "scripts": {
     "start": "nodemon ./src/index.ts",
+    "converter": "nodemon ./src/routes/uploads/utils/converter/",
     "test": "jest",
     "lint": "gts lint",
     "clean": "gts clean",

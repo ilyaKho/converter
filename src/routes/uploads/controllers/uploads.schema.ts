@@ -15,6 +15,6 @@ export const uploadSchema = z.object({
     extention: z.string(),
     file: fileScheme
 })
-export type uploadType = z.infer<typeof uploadSchema>;
+export type UploadT = z.infer<typeof uploadSchema>;
 
 

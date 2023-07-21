@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { generateToken, ucodeToken } from '../utils/jwt';
-import { authorizedRequest, iUser } from '../../../types';
+import { AuthorizedRequestT } from '../../../types';
 import { nanoid } from 'nanoid';
-import { UserT, unknownUserT } from "../../users/controllers/users.schema";
+import { UnknownUserT } from "../../users/controllers/users.schema";
 
 
 export const hasSession = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let request =  req as authorizedRequest
+        let request =  req as AuthorizedRequestT
         const token = req.header('Authorization')?.replace('Bearer ', '');
         if (token) {
             const decoded = ucodeToken(token);
@@ -15,7 +15,7 @@ export const hasSession = async (req: Request, res: Response, next: NextFunction
             request.token = ''
         }
         else{
-            let newUser: unknownUserT = {
+            let newUser: UnknownUserT = {
                authorized: false,
                userId: nanoid(),
                monthLimit: 20,
