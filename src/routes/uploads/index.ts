@@ -6,7 +6,7 @@ import {routes as statusRouter} from './status/index'
 import { isJPGOnly } from "./guards/isJPGOnly";
 const routes = express.Router()
 
-routes.use('/status', statusRouter)
-routes.post('/', uploadConfig, uploadsValidation, isJPGOnly, uploadConroller)
+// routes.use('/status', statusRouter)
+routes.post('/', uploadConfig, uploadsValidation, uploadConroller)
 
 export {routes}

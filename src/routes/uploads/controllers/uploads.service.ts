@@ -30,11 +30,10 @@ export const uploadService = async (dto: UploadT, user: UserT | UnknownUserT) =>
             quality,
         }
 
-        // const subscription = hasSubscription(user as UserT)       
-        // let result
-        // if (subscription) result = queuesPremium.addToQueue(queuesPayload)
-        // else result = queues.addToQueue(queuesPayload)
-       let  result = queuesPremium.addToQueue(queuesPayload)
+        const subscription = hasSubscription(user as UserT)       
+        let result
+        if (subscription) result = queuesPremium.addToQueue(queuesPayload)
+        else result = queues.addToQueue(queuesPayload)
         return result
     } catch (error) {
         throw error

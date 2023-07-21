@@ -2,8 +2,7 @@ import { Queue, QueueWithStatus } from "./fileQueue.schema";
 import { Status } from "../../../../types";
 import { convert } from "../converter/controllers/converterService";
 import { exec } from "child_process";
-import path, { resolve } from "path";
-import { error } from "console";
+import path from "path";
 
 
 export class Files {
@@ -21,7 +20,7 @@ export class Files {
             return el
         })
     }
-    getFiles(){
+    getFiles() {
         return this.files
     }
 }
@@ -88,28 +87,39 @@ class PremiumQueues extends QueuesSevice {
         return { fileName: file.filename, fileId: file.fileId, status }
     }
     async runProccess(file: Queue) {
-        let converterPath = ''
-        let command = `node `
-        const params = `${file.filename} ${file.extention} -q ${file.quality}`
-        if (process.env.START_TYPE === 'DEV') {
-            converterPath = path.join(__dirname, '../', 'convert', 'index.ts')
-            command = `ts-node converterPath ${params}`
-        }
-        else {
-            converterPath = path.join(__dirname, '../', 'convert', 'index.js')
-            command = `node converterPath ${params}`
+        try {
+            let converterPath = ''
+            let command = ``
+            const params = `"${file.filename}" ${file.extention} -q ${file.quality}`
+            if (process.env.START_TYPE === 'DEV') {
+                converterPath = path.join(__dirname, '../', 'converter', 'index.ts')
+                command = `npx ts-node ${converterPath} ${params}`
+            }
+            else {
+                converterPath = path.join(__dirname, '../', 'converter', 'index.js')
+                command = `node ${converterPath} ${params}`
+            }
+
+            const result: string = await new Promise((resolve, reject) => {
+                exec(command, (error, stdout, stderr) => {
+                    if (error) {
+                        reject(error)
+                    }
+                    else if (stderr) {
+                        if(stderr === 'Debugger attached.\r\nDebugger attached.\r\nWaiting for the debugger to disconnect...\r\nWaiting for the debugger to disconnect...\r\n') resolve(stdout.trim())
+                        reject(stderr)
+                    }
+                    else {
+                        console.log(stdout)
+                        resolve(stdout.trim())
+                    }
+                })
+            })
+            return result
+        } catch (error) {
+            throw error
         }
 
-        const result: string =  await new Promise((resolve, reject) => {
-             exec(command, (error, stdout, stderr)=>{
-                if(error) reject(error)
-                else if(stderr) reject(error)
-                else {
-                    console.log(stdout)
-                    resolve(stdout.trim())}
-             })
-        })
-        return result
     }
 }
 export const files = new Files()

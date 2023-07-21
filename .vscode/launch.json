@@ -13,6 +13,24 @@
             "args": []
         },
         {
+            "name": "Converter Debug",
+            "type": "node",
+            "request": "launch",
+            "args": [
+                "${relativeFile}",               
+                "image 1759.png",               
+                "webp"               
+            ],
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register",
+               
+            ],
+            "cwd": "${workspaceRoot}",
+            // "protocol": "inspector",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
             "name": "start with params",
             "type": "node",
             "request": "launch",

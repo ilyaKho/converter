@@ -9,10 +9,10 @@ import { hasSession } from "./auth/guards/hasSession";
 const routes = express.Router()
 
 
-routes.use('/auth', authRouts)
-routes.use(hasSession)
+// routes.use('/auth', authRouts)
+// routes.use(hasSession)
 routes.use('/profile', isLogin, profileRouts)
-routes.use('/upload', dayLimit, uploadRouts)
+routes.use('/upload', uploadRouts)
 routes.use('/',
     (req, res) => {
         const request = req as AuthorizedRequestT
