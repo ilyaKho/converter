@@ -1,10 +1,14 @@
-import { Request, Response } from "express"
 import { queues } from "../../utils/filesQueue"
+import { QueueWithStatus } from "../../utils/filesQueue/fileQueue.schema"
 
-export const getStatus = (token: string, timeout: number)=>{
+export const getStatus = async (fileId: string, timeout: number=1000)=>{
     try {
-        let fileData = queues.getFileList().filter(file=> file.fileId === token)
-        return fileData
+        if(timeout < 1000) timeout = 1000
+        const file = await new Promise((resolve, reject)=>{
+            let fileData = queues.getFileList().filter(file=> file.fileId === fileId)
+            setTimeout(()=>resolve(fileData), timeout)
+        })
+        return file as QueueWithStatus
     } catch (error) {
         throw error
     }

@@ -3,12 +3,11 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "build",
-    "resolveJsonModule": true
-    
+    "esModuleInterop":true,
   },
   "ts-node": {
     "files": true,
-    "strictPropertyInitialization": false,
+    // "strictPropertyInitialization": false,
 
   },
   "files": [
