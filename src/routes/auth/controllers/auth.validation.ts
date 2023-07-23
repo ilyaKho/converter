@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { ZodError } from 'zod'
-import { uploadSchema } from "./uploads.schema";
-export const uploadsValidation = (req: Request, res: Response, next: NextFunction) => {
+import { z, ZodError } from 'zod'
+import { signUpSchema } from "./auth.schema";
+export const authValidation = (req: Request, res: Response, next: NextFunction) => {
     try {
-        let result = uploadSchema.parse({ ...req.body, file: req.file })
+        let result = signUpSchema.parse({ ...req.body, file: req.file })
         return next()
     } catch (error) {
         if (error instanceof ZodError) return res.json(error)

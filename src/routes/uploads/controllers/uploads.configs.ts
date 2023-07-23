@@ -1,3 +1,4 @@
+import { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import path from "path";
 
@@ -11,7 +12,7 @@ const storage = multer.diskStorage({
   }
 }
 )
-const uploadConfig = 
-multer({ storage })
-  .single('images')
+const uploadConfig =
+  multer({ storage, limits: { fileSize: 50 * 1024 * 1024 } })
+    .single('images')
 export { uploadConfig }

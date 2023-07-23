@@ -5,13 +5,40 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ts-node",
+            "type": "bashdb",
+            "request": "launch",
+            "name": "Bash-Debug (hardcoded script name)",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bbb.sh",
+            "args": []
+        },
+        {
+            "name": "Converter Debug",
             "type": "node",
             "request": "launch",
             "args": [
                 "${relativeFile}",               
-                "C:/Users/mi/Documents/Programs/Edu/homeWork/src/library/",               
-                "C:/Users/mi/Documents/Programs/Edu/homeWork/src/library/",
+                "image 1759.png",               
+                "webp"               
+            ],
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register",
+               
+            ],
+            "cwd": "${workspaceRoot}",
+            // "protocol": "inspector",
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "start with params",
+            "type": "node",
+            "request": "launch",
+            "args": [
+                "${relativeFile}",               
+                "convert",               
+                "amn.png",               
+                "webp",
                 // "--ext",
                 // "jpeg"
                
